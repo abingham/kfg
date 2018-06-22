@@ -2,7 +2,7 @@ class ConfigKeyError(KeyError):
     pass
 
 
-class ConfigKey:
+class ConfigCursor:
     def __init__(self, config):
         self._config = config
         self._path = []
@@ -31,8 +31,8 @@ class ConfigKey:
                 'No config entry at path {}'.format(
                     self._path))
         except TypeError:
-            # Assumption is this is caused by indexing un-indexable object.
-            # Perhaps an explicyt check above would be cleaner.
+            # Assumption is this is caused by indexing an un-indexable object.
+            # Perhaps an explicit check above would be cleaner.
             raise ConfigKeyError(
                 'No config entry at path {}'.format(
                     self._path))
@@ -43,4 +43,4 @@ class Config:
         self._data = {}
 
     def __getitem__(self, name):
-        return ConfigKey(self)[name]
+        return ConfigCursor(self)[name]
