@@ -38,7 +38,6 @@ class ConfigKey:
                     self._path))
 
 
-
 class Config:
     def __init__(self):
         self._data = {}
