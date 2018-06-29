@@ -3,20 +3,31 @@ import yaml
 from kfg.config import Config
 
 
-def load_config(stream):
-    """Load a configuration from a file-like object.
+def load_config(stream, config=None):
+    """Load a YAML configuration from a file-like object.
 
-    Returns: A `Config` instance.
+    If `config` is not `None`, then it will be used to hold the loaded
+    configuration information; all data in the instance will be replaced.
+    Otherwise, a new instance of `Config` will be created, populated, and
+    returned.
+
+    Args:
+      config: An instance of `Config`, or `None`. The data in this instance will be replaced.
+
+    Returns: An instance of `Config`.
 
     Raises:
       ValueError: If there is an error loading the config.
     """
+
+    if config is None:
+        config = Config()
+
     try:
         data = yaml.safe_load(stream)
-        config = Config()
         config._data = data
         return config
-    except (OSError, UnicodeDecodeError, yaml.parser.ParserError) as exc:
+    except (UnicodeDecodeError, yaml.parser.ParserError) as exc:
         raise ValueError(
             'Error loading configuration from {}'.format(stream)) from exc
 
