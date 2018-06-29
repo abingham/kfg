@@ -1,3 +1,6 @@
+"""Support for loading/saving YAML configuration data.
+"""
+
 import yaml
 
 from kfg.config import Config
@@ -12,6 +15,7 @@ def load_config(stream, config=None):
     returned.
 
     Args:
+      stream: A file-like object from which serialized configuration data can be read.
       config: An instance of `Config`, or `None`. The data in this instance will be replaced.
 
     Returns: An instance of `Config`.
@@ -36,5 +40,11 @@ def serialize_config(config):
     """Convert a `Config` into a string.
 
     This is complementary with `load_config`.
+
+    Args:
+        config: The `Config` instance to serialize.
+
+    Returns:
+        The YAML-serialized contents of `config`.
     """
     return yaml.dump(config._data)
