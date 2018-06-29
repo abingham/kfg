@@ -28,7 +28,8 @@ def _normalize_key(key):
 
 @_normalize_key.register(str)
 def _(key):
-    """If the provided key is a simple string, we need to pack it into a 1-tuple.
+    """If the provided key is a simple string, we need to pack it into a
+    1-tuple.
     """
     return (key,)
 
@@ -71,8 +72,8 @@ class Config:
     will be applied to the value at the key before it is provided to the user.
     If a transform fails (i.e. throws an exception) then a `ConfigValueError`
     will be generated. This helps you have validated configurations.
-
     """
+
     def __init__(self):
         "Create an empty Config."
         self._data = {}
@@ -107,7 +108,6 @@ class Config:
             raise ConfigKeyError(
                 'No config entry at path {}'.format(
                     key))
-
 
         return self._apply_transform(key, value)
 
