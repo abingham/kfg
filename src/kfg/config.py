@@ -150,29 +150,44 @@ class Config:
         except ConfigKeyError:
             return default
 
-    # TODO: Should users be able to specify the exception their transform will
-    # throw on failure? As it is we just hard-code the likely candidates.
+    DEFAULT_TRANSFORM_EXCEPTIONS = (ValueError,
+                                    TypeError,
+                                    KeyError,
+                                    IndexError)
 
     @normalize_key
-    def set_transform(self, key, transform):
+    def set_transform(self,
+                      key,
+                      transform,
+                      exceptions=DEFAULT_TRANSFORM_EXCEPTIONS):
         """Set the transform for a key.
 
         The transform will be used to modify (or perhaps just validate) a value
         before it is passed back to callers.
 
+        Config detects that a transform has failed by catching exceptions in
+        the `exceptions` container. That is, if the transformation raises any
+        exception in `exceptions`, then that exception is converted into a
+        `ConfigValueError`. Any other exception is ignored and propagates up to
+        the caller.
+
         Args:
             key: The key to which the transform applies.
             transform: a 1-argument callable that should return the transformed
                 value for `key` or raise an exception.
+            exceptions: Container of exception types which the transform will detect.
+
         """
-        self._transforms[tuple(key)] = transform
+        self._transforms[tuple(key)] = (transform, exceptions)
 
     def _apply_transform(self, key, value):
         """A apply a transform if it exists.
         """
         if key in self._transforms:
+            transform, exceptions = self._transforms[key]
             try:
-                value = self._transforms[key](value)
-            except (ValueError, TypeError, KeyError, IndexError) as e:
+                value = transform(value)
+            except exceptions as e:
                 raise ConfigValueError() from e
+
         return value
