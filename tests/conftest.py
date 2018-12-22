@@ -5,7 +5,7 @@ import pytest
 @pytest.fixture
 def config():
     "Fixture providing an empty Config."
-    return Config()
+    return Config({})
 
 
 @pytest.fixture(scope='module',

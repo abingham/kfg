@@ -74,10 +74,14 @@ class Config:
     will be generated. This helps you have validated configurations.
     """
 
-    def __init__(self):
+    def __init__(self, config_dict=None):
         "Create an empty Config."
-        self._data = {}
+        self._data = config_dict if config_dict is not None else {}
         self._transforms = {}
+
+    @property
+    def dict(self):
+        return self._data
 
     @normalize_key
     def __getitem__(self, key):
